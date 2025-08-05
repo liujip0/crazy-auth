@@ -1,3 +1,9 @@
 export default function Index() {
-  return <div>Index!</div>;
+  return (
+    <div>
+      <div>
+        <h1>@liujip0/crazy-auth</h1>
+      </div>
+    </div>
+  );
 }

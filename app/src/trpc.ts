@@ -1,4 +1,4 @@
-import type { AppRouter } from "@liujip0-web-template/api/src/routes/routes.ts";
+import type { AppRouter } from "@crazy-auth/api/src/routes/routes.ts";
 import { QueryClient } from "@tanstack/react-query";
 import { createTRPCClient, httpBatchLink } from "@trpc/client";
 import { createTRPCOptionsProxy } from "@trpc/tanstack-react-query";
