@@ -1,0 +1,13 @@
+-- Migration number: 0001 	 2025-08-05T19:21:40.696Z
+CREATE TABLE IF NOT EXISTS Users (
+  username TEXT NOT NULL PRIMARY KEY,
+  password_hash TEXT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS POSTS (
+  id INTEGER NOT NULL PRIMARY KEY,
+  user TEXT NOT NULL,
+  title TEXT NOT NULL,
+  body TEXT NOT NULL,
+  FOREIGN KEY (user) REFERENCES Users (username)
+);

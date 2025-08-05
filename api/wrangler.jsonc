@@ -3,4 +3,11 @@
   "name": "crazy-auth-api",
   "main": "src/index.ts",
   "compatibility_date": "2025-08-01",
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "crazy-auth-db",
+      "database_id": "84bc3281-6fb1-4696-9810-fc309ad67449",
+    },
+  ],
 }

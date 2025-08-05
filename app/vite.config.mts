@@ -7,7 +7,7 @@ export default defineConfig({
   // ! [REPLACE WITH BASE IN GITHUB PAGES WORKFLOW]
   plugins: [reactRouter(), tsconfigPaths()],
   server: {
-    port: 5173,
+    port: 5176,
     fs: {
       allow: ["../.."],
     },
