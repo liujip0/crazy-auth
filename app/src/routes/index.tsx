@@ -1,9 +1,10 @@
+import TopBar from "../components/TopBar/TopBar.tsx";
+import styles from "./index.module.css";
+
 export default function Index() {
   return (
-    <div>
-      <div>
-        <h1>@liujip0/crazy-auth</h1>
-      </div>
+    <div className={styles.container}>
+      <TopBar />
     </div>
   );
 }

@@ -10,18 +10,12 @@
     --text-helperText-size-fallback
   ); /* default: 0.75em */
 
-  --color-primary: var(--color-primary-fallback); /* default: blue */
-  --color-primary-contrastText: var(
-    --color-primary-contrastText-fallback
-  ); /* default: white */
-  --color-secondary: var(--color-secondary-fallback); /* default: orange */
-  --color-secondary-contrastText: var(
-    --color-secondary-contrastText-fallback
-  ); /* default: white */
-  --color-background: var(--color-background-fallback); /* default: white */
-  --color-background-contrastText: var(
-    --color-background-contrastText-fallback
-  ); /* default: black */
+  --color-primary: teal; /* default: blue */
+  --color-primary-contrastText: white; /* default: white */
+  --color-secondary: black; /* default: orange */
+  --color-secondary-contrastText: white; /* default: white */
+  --color-background: black; /* default: white */
+  --color-background-contrastText: white; /* default: black */
   --color-paper: var(--color-paper-fallback); /* default: gray */
   --color-paper-contrastText: var(
     --color-paper-contrastText-fallback
@@ -33,7 +27,7 @@
   --z-index-modal: var(--z-index-modal-fallback); /* default: 101 */
   --z-index-tooltip: var(--z-index-tooltip-fallback); /* default: 102 */
 
-  --border-radius: var(--border-radius-fallback); /* default: 0 */
+  --border-radius: 4px; /* default: 0 */
   --border-width: var(--border-width-fallback); /* default: 1px */
   --input-height: var(--input-height-fallback); /* default: calc(37.6 + 8px) */
   --hover-dim: var(--hover-dim-fallback); /* default: brightness(0.8) */
