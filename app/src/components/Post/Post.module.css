@@ -1,0 +1,18 @@
+.post {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+
+  background-color: var(--color-primary);
+  border-radius: var(--border-radius);
+}
+
+.title {
+  padding: 8px 16px;
+
+  font-family: var(--text-font-family);
+  font-size: var(--text-h2-size);
+  background-color: var(--color-secondary);
+  color: var(--color-secondary-contrastText);
+  border-radius: var(--border-radius);
+}

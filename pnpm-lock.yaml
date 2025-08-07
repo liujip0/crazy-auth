@@ -20,10 +20,16 @@ importers:
       '@trpc/server':
         specifier: ^11.4.3
         version: 11.4.4(typescript@5.8.3)
+      zod:
+        specifier: ^4.0.15
+        version: 4.0.15
     devDependencies:
       '@cloudflare/workers-types':
         specifier: ^4.20250801.0
         version: 4.20250805.0
+      typescript:
+        specifier: ~5.8.3
+        version: 5.8.3
       wrangler:
         specifier: ^4.27.0
         version: 4.28.0(@cloudflare/workers-types@4.20250805.0)
@@ -2411,6 +2417,9 @@ packages:
   zod@3.22.3:
     resolution: {integrity: sha512-EjIevzuJRiRPbVH4mGc8nApb/lVLKVpmUhAaR5R5doKGfAnGJ6Gr3CViAVjP+4FWSxCsybeWQdcgCtbX+7oZug==}
 
+  zod@4.0.15:
+    resolution: {integrity: sha512-2IVHb9h4Mt6+UXkyMs0XbfICUh1eUrlJJAOupBHUhLRnKkruawyDddYRCs0Eizt900ntIMk9/4RksYl+FgSpcQ==}
+
 snapshots:
 
   '@ampproject/remapping@2.3.0':
@@ -4646,3 +4655,5 @@ snapshots:
       youch-core: 0.3.3
 
   zod@3.22.3: {}
+
+  zod@4.0.15: {}
