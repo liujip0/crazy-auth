@@ -24,3 +24,15 @@
   background-color: var(--color-secondary);
   color: var(--color-secondary-contrastText);
 }
+
+.userContainer {
+  margin-right: 16px;
+
+  font-family: var(--text-font-family);
+  font-size: var(--text-h2-size);
+  color: var(--color-primary-contrastText);
+}
+
+.userLabel {
+  font-style: italic;
+}

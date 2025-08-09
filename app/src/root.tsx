@@ -20,7 +20,7 @@ import { queryClient } from "./trpc.ts";
 export const meta: MetaFunction = () => {
   return [
     {
-      title: "liujip0-web-template",
+      title: "@liujip0/crazy-auth",
     },
   ];
 };

@@ -28,7 +28,7 @@
   --z-index-tooltip: var(--z-index-tooltip-fallback); /* default: 102 */
 
   --border-radius: 4px; /* default: 0 */
-  --border-width: var(--border-width-fallback); /* default: 1px */
+  --border-width: 4px; /* default: 1px */
   --input-height: var(--input-height-fallback); /* default: calc(37.6 + 8px) */
   --hover-dim: var(--hover-dim-fallback); /* default: brightness(0.8) */
 

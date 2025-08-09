@@ -5,12 +5,14 @@ import styles from "./index.module.css";
 export default function Index() {
   return (
     <div className={styles.container}>
-      <TopBar />
-      <div className={styles.feed}>
-        <Post />
-        <Post />
-        <Post />
-        <Post />
+      <TopBar buttons="loggedout" />
+      <div className={styles.content}>
+        <div className={styles.feed}>
+          <Post />
+          <Post />
+          <Post />
+          <Post />
+        </div>
       </div>
     </div>
   );
