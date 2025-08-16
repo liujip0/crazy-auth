@@ -2,7 +2,20 @@ import { Button } from "@liujip0/components";
 import { useState } from "react";
 import styles from "./PasswordEditor.module.css";
 
-const macApps = ["Finder", "Safari", "Weather", "Calculator"];
+const macApps = [
+  "Calculator",
+  "Chrome",
+  "Facetime",
+  "Finder",
+  "Firefox",
+  "Mail",
+  "Messages",
+  "Music",
+  "Safari",
+  "System Preferences",
+  "Weather",
+  "Zen Browser",
+];
 
 type PasswordEditorProps = {
   onDone?: (value: string) => void;
@@ -44,6 +57,8 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                   : <MacIcon
                       key={app}
                       icon={app}
+                      dockApps={dockApps}
+                      setDockApps={setDockApps}
                     />
                 )}
               </div>
@@ -60,12 +75,17 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                     setDockApps([...dockApps, icon]);
                   }
                 }}>
-                {dockApps.map((app) => (
+                <div className={styles.dockSpacer}></div>
+                {dockApps.map((app, index) => (
                   <MacIcon
                     key={app}
                     icon={app}
+                    index={index}
+                    dockApps={dockApps}
+                    setDockApps={setDockApps}
                   />
                 ))}
+                <div className={styles.dockSpacer}></div>
               </div>
               <Button
                 className={styles.doneButton}
@@ -86,14 +106,29 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
 
 type MacIconProps = {
   icon: (typeof macApps)[number];
+  index?: number;
+  dockApps: string[];
+  setDockApps: (value: string[]) => void;
 };
-function MacIcon({ icon }: MacIconProps) {
+function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
   return (
     <div
       className={styles.macIcon}
       draggable
       onDragStart={(event) => {
         event.dataTransfer.setData("text/plain", icon);
+      }}
+      onDrop={(event) => {
+        event.stopPropagation();
+        event.preventDefault();
+
+        const droppedIcon = event.dataTransfer.getData("text/plain");
+        if (index !== undefined) {
+          const newDockApps = dockApps.filter((app) => app !== droppedIcon);
+          newDockApps.splice(index, 0, droppedIcon);
+
+          setDockApps(newDockApps);
+        }
       }}>
       <img
         src={import.meta.env.BASE_URL + "assets/appicons/mac/" + icon + ".png"}
