@@ -12,8 +12,25 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.title {
+  font-size: var(--text-h1-size);
+  font-family: var(--text-font-family);
+  color: var(--color-background-contrastText);
 }
 
 .inputLabel {
   color: var(--color-background-contrastText);
+}
+
+.input {
+  width: 15em;
+}
+
+.button {
+  background-color: var(--color-primary);
+  color: var(--color-primary-contrastText);
 }

@@ -8,7 +8,9 @@ type TopBarProps = {
 export default function TopBar({ buttons }: TopBarProps) {
   return (
     <div className={styles.topBar}>
-      <h1 className={styles.title}>@liujip0/crazy-auth</h1>
+      <Link to="/">
+        <h1 className={styles.title}>@liujip0/crazy-auth</h1>
+      </Link>
       <div className={styles.buttons}>
         {buttons === "loggedout" ?
           <>

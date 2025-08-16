@@ -11,6 +11,8 @@
   font-family: var(--text-font-family);
   font-size: var(--text-h1-size);
   color: var(--color-primary-contrastText);
+
+  cursor: pointer;
 }
 
 .buttons {
