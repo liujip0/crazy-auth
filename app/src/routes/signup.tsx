@@ -17,6 +17,7 @@ export default function SignUp() {
             setUsername(value);
           }}
           label="Username"
+          labelClassName={styles.inputLabel}
         />
       </div>
     </div>
