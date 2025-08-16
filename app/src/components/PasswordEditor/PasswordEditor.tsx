@@ -31,17 +31,23 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
       {
         {
           "": (
-            <div className={styles.selectOs}>
-              <Button
-                onClick={() => {
-                  setOs("mac");
-                }}>
-                Mac
-              </Button>
-            </div>
+            <>
+              <h1 className={styles.selectOsTitle}>Select OS</h1>
+              <div className={styles.selectOs}>
+                <Button
+                  onClick={() => {
+                    setOs("mac");
+                  }}>
+                  Mac
+                </Button>
+              </div>
+            </>
           ),
           mac: (
             <>
+              <p className={styles.instructions}>
+                Enter your password by dragging apps into the dock below.
+              </p>
               <div
                 className={styles.desktop}
                 onDragOver={(event) => {
@@ -126,7 +132,7 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                 className={styles.doneButton}
                 onClick={() => {
                   if (onDone) {
-                    onDone("macos***" + dockApps.join(",,"));
+                    onDone("mac***" + dockApps.join("//"));
                   }
                 }}>
                 Submit
