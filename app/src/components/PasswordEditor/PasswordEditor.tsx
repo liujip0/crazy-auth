@@ -23,6 +23,8 @@ type PasswordEditorProps = {
 export default function PasswordEditor({ onDone }: PasswordEditorProps) {
   const [os, setOs] = useState<"mac" | "">("");
   const [dockApps, setDockApps] = useState<string[]>([]);
+  const [leftDragHover, setLeftDragHover] = useState(false);
+  const [rightDragHover, setRightDragHover] = useState(false);
 
   return (
     <div className={styles.container}>
@@ -48,6 +50,7 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                 }}
                 onDrop={(event) => {
                   event.preventDefault();
+
                   const icon = event.dataTransfer.getData("text/plain");
                   setDockApps(dockApps.filter((app) => app !== icon));
                 }}>
@@ -62,20 +65,30 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                     />
                 )}
               </div>
-              <div
-                className={styles.dock}
-                onDragOver={(event) => {
-                  event.preventDefault();
-                  event.dataTransfer.dropEffect = "move";
-                }}
-                onDrop={(event) => {
-                  event.preventDefault();
-                  const icon = event.dataTransfer.getData("text/plain");
-                  if (!dockApps.includes(icon)) {
-                    setDockApps([...dockApps, icon]);
+              <div className={styles.dock}>
+                <div
+                  className={
+                    styles.dockSpacer +
+                    " " +
+                    (leftDragHover ? styles.dockSpacerLeftDragHover : "")
                   }
-                }}>
-                <div className={styles.dockSpacer}></div>
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = "move";
+                    setLeftDragHover(true);
+                  }}
+                  onDragLeave={() => {
+                    setLeftDragHover(false);
+                  }}
+                  onDrop={(event) => {
+                    event.preventDefault();
+                    setLeftDragHover(false);
+
+                    const icon = event.dataTransfer.getData("text/plain");
+                    if (!dockApps.includes(icon)) {
+                      setDockApps([icon, ...dockApps]);
+                    }
+                  }}></div>
                 {dockApps.map((app, index) => (
                   <MacIcon
                     key={app}
@@ -85,7 +98,29 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                     setDockApps={setDockApps}
                   />
                 ))}
-                <div className={styles.dockSpacer}></div>
+                <div
+                  className={
+                    styles.dockSpacer +
+                    " " +
+                    (rightDragHover ? styles.dockSpacerRightDragHover : "")
+                  }
+                  onDragOver={(event) => {
+                    event.preventDefault();
+                    event.dataTransfer.dropEffect = "move";
+                    setRightDragHover(true);
+                  }}
+                  onDragLeave={() => {
+                    setRightDragHover(false);
+                  }}
+                  onDrop={(event) => {
+                    event.preventDefault();
+                    setRightDragHover(false);
+
+                    const icon = event.dataTransfer.getData("text/plain");
+                    if (!dockApps.includes(icon)) {
+                      setDockApps([...dockApps, icon]);
+                    }
+                  }}></div>
               </div>
               <Button
                 className={styles.doneButton}
@@ -111,23 +146,44 @@ type MacIconProps = {
   setDockApps: (value: string[]) => void;
 };
 function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
+  const [dragHover, setDragHover] = useState(false);
+
   return (
     <div
-      className={styles.macIcon}
+      className={
+        styles.macIcon + " " + (dragHover ? styles.macIconDragHover : "")
+      }
       draggable
       onDragStart={(event) => {
         event.dataTransfer.setData("text/plain", icon);
       }}
+      onDragOver={(event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        setDragHover(true);
+      }}
+      onDragLeave={() => {
+        setDragHover(false);
+      }}
       onDrop={(event) => {
         event.stopPropagation();
         event.preventDefault();
+        setDragHover(false);
 
-        const droppedIcon = event.dataTransfer.getData("text/plain");
         if (index !== undefined) {
-          const newDockApps = dockApps.filter((app) => app !== droppedIcon);
-          newDockApps.splice(index, 0, droppedIcon);
+          const droppedIcon = event.dataTransfer.getData("text/plain");
+          const droppedIconIndex = dockApps.indexOf(droppedIcon);
+          if (droppedIconIndex !== -1 && droppedIconIndex < index) {
+            const newDockApps = dockApps.filter((app) => app !== droppedIcon);
+            newDockApps.splice(index, 0, droppedIcon);
 
-          setDockApps(newDockApps);
+            setDockApps(newDockApps);
+          } else {
+            const newDockApps = dockApps.filter((app) => app !== droppedIcon);
+            newDockApps.splice(index + 1, 0, droppedIcon);
+
+            setDockApps(newDockApps);
+          }
         }
       }}>
       <img
