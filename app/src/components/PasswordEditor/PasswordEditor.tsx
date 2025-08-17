@@ -1,8 +1,8 @@
 import { Button } from "@liujip0/components";
-import { useState } from "react";
+import React, { useState } from "react";
 import styles from "./PasswordEditor.module.css";
 
-const macApps = [
+const MAC_APPS = [
   "Calculator",
   "Chrome",
   "Facetime",
@@ -16,6 +16,8 @@ const macApps = [
   "Weather",
   "Zen Browser",
 ];
+export const OS_SEPARATOR = "***";
+export const ITEM_SEPARATOR = "//";
 
 type PasswordEditorProps = {
   onDone?: (value: string) => void;
@@ -60,14 +62,12 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                   const icon = event.dataTransfer.getData("text/plain");
                   setDockApps(dockApps.filter((app) => app !== icon));
                 }}>
-                {macApps.map((app) =>
+                {MAC_APPS.map((app) =>
                   dockApps.includes(app) ?
-                    <></>
+                    <React.Fragment key={app}></React.Fragment>
                   : <MacIcon
                       key={app}
                       icon={app}
-                      dockApps={dockApps}
-                      setDockApps={setDockApps}
                     />
                 )}
               </div>
@@ -132,7 +132,9 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                 className={styles.doneButton}
                 onClick={() => {
                   if (onDone) {
-                    onDone("mac***" + dockApps.join("//"));
+                    onDone(
+                      "mac" + OS_SEPARATOR + dockApps.join(ITEM_SEPARATOR)
+                    );
                   }
                 }}>
                 Submit
@@ -145,13 +147,13 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
   );
 }
 
-type MacIconProps = {
-  icon: (typeof macApps)[number];
+export type MacIconProps = {
+  icon: (typeof MAC_APPS)[number];
   index?: number;
-  dockApps: string[];
-  setDockApps: (value: string[]) => void;
+  dockApps?: string[];
+  setDockApps?: (value: string[]) => void;
 };
-function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
+export function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
   const [dragHover, setDragHover] = useState(false);
 
   return (
@@ -176,7 +178,7 @@ function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
         event.preventDefault();
         setDragHover(false);
 
-        if (index !== undefined) {
+        if (index !== undefined && dockApps && setDockApps) {
           const droppedIcon = event.dataTransfer.getData("text/plain");
           const droppedIconIndex = dockApps.indexOf(droppedIcon);
           if (droppedIconIndex !== -1 && droppedIconIndex < index) {

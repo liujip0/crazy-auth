@@ -37,6 +37,8 @@
   --table-cell-border-width: var(
     --table-cell-border-width-fallback
   ); /* default: 2px */
+
+  --mac-icon-size: 36px;
 }
 
 * {

@@ -1,17 +1,35 @@
-import { Button, Input } from "@liujip0/components";
+import {
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogTitle,
+  Input,
+} from "@liujip0/components";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import PasswordEditor from "../components/PasswordEditor/PasswordEditor.tsx";
+import { useRef, useState } from "react";
+import { useNavigate } from "react-router";
+import PasswordEditor, {
+  ITEM_SEPARATOR,
+  MacIcon,
+  OS_SEPARATOR,
+} from "../components/PasswordEditor/PasswordEditor.tsx";
 import TopBar from "../components/TopBar/TopBar.tsx";
 import { trpc } from "../trpc.ts";
 import styles from "./signup.module.css";
 
 export default function SignUp() {
+  const navigate = useNavigate();
+
   const [page, setPage] = useState<"username" | "password">("username");
   const [username, setUsername] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [password, setPassword] = useState("");
+
+  const submitUsernameRef = useRef<HTMLButtonElement>(null);
 
   const checkusername = useMutation(trpc.users.checkusername.mutationOptions());
+  const signup = useMutation(trpc.users.signup.mutationOptions());
 
   return (
     <div className={styles.container}>
@@ -31,8 +49,16 @@ export default function SignUp() {
               labelClassName={styles.inputLabel}
               error={usernameError !== ""}
               helperText={usernameError}
+              onKeyDown={(event) => {
+                if (event.key === "Enter") {
+                  if (submitUsernameRef.current) {
+                    submitUsernameRef.current.click();
+                  }
+                }
+              }}
             />
             <Button
+              ref={submitUsernameRef}
               className={styles.button}
               onClick={async () => {
                 if (username.length <= 3) {
@@ -56,7 +82,46 @@ export default function SignUp() {
               Next
             </Button>
           </>
-        : <PasswordEditor />}
+        : <PasswordEditor
+            onDone={(value) => {
+              setPassword(value);
+            }}
+          />
+        }
+        <Dialog
+          open={password !== ""}
+          onClose={() => {
+            setPassword("");
+          }}>
+          <DialogTitle>Confirm Password</DialogTitle>
+          <DialogContent>
+            <div className={styles.dock}>
+              {password !== "" &&
+                password
+                  .split(OS_SEPARATOR)[1]
+                  .split(ITEM_SEPARATOR)
+                  .map((app) => <MacIcon icon={app} />)}
+            </div>
+          </DialogContent>
+          <DialogActions>
+            <Button
+              onClick={() => {
+                setPassword("");
+              }}>
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                signup.mutate({
+                  username,
+                  password,
+                });
+                navigate("/");
+              }}>
+              Confirm
+            </Button>
+          </DialogActions>
+        </Dialog>
       </div>
     </div>
   );

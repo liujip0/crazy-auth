@@ -34,3 +34,14 @@
   background-color: var(--color-primary);
   color: var(--color-primary-contrastText);
 }
+
+.dock {
+  display: flex;
+  padding: 8px;
+  margin: 8px;
+  overflow-x: auto;
+  justify-content: center;
+
+  background-color: #eeeeeeaa;
+  border-radius: var(--border-radius);
+}
