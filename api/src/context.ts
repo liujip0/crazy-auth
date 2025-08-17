@@ -8,10 +8,14 @@ export const createContext = async ({
 }: FetchCreateContextFnOptions & {
   env: Env;
 }) => {
+  const responseHeaders = resHeaders;
+  responseHeaders.set("Access-Control-Allow-Origin", "*");
+  responseHeaders.set("Access-Control-Allow-Headers", "*");
+
   return {
     req,
     env,
-    resHeaders,
+    resHeaders: responseHeaders,
   };
 };
 
