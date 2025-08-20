@@ -16,7 +16,7 @@ import PasswordEditor, {
 } from "../components/PasswordEditor/PasswordEditor.tsx";
 import TopBar from "../components/TopBar/TopBar.tsx";
 import { trpc } from "../trpc.ts";
-import styles from "./signup.module.css";
+import styles from "./login.module.css";
 
 export default function SignUp() {
   const navigate = useNavigate();
@@ -29,13 +29,7 @@ export default function SignUp() {
   const submitUsernameRef = useRef<HTMLButtonElement>(null);
 
   const checkusername = useMutation(trpc.users.checkusername.mutationOptions());
-  const signup = useMutation(
-    trpc.users.signup.mutationOptions({
-      onSuccess: () => {
-        navigate("/login");
-      },
-    })
-  );
+  const signup = useMutation(trpc.users.signup.mutationOptions());
 
   return (
     <div className={styles.container}>
@@ -43,7 +37,7 @@ export default function SignUp() {
       <div className={styles.content}>
         {page === "username" ?
           <>
-            <h1 className={styles.title}>Sign Up</h1>
+            <h1 className={styles.title}>Log In</h1>
             <Input
               id="signup-username"
               value={username}
@@ -127,6 +121,7 @@ export default function SignUp() {
                   username,
                   password,
                 });
+                navigate("/");
               }}>
               Confirm
             </Button>
