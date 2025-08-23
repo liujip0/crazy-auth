@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { PostsRow } from "../../dbtypes/Posts.ts";
 import { publicProcedure } from "../../trpc.ts";
 
 export const getPosts = publicProcedure
@@ -18,7 +19,7 @@ export const getPosts = publicProcedure
       LIMIT ? OFFSET ?;`
     )
       .bind(opts.input.limit, opts.input.offset)
-      .run();
+      .run<PostsRow>();
 
     if (queryRes.success) {
       return queryRes.results;

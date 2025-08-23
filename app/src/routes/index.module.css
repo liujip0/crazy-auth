@@ -19,6 +19,7 @@
   flex-direction: column;
   padding: 32px;
   gap: 32px;
+  width: 100%;
 
   overflow-y: scroll;
 }
@@ -31,4 +32,21 @@
   background-color: var(--color-primary);
   color: var(--color-primary-contrastText);
   border: var(--border-radius) solid var(--color-secondary);
+}
+
+.newPostDialogContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.newPostDialogButton {
+  flex: 1;
+
+  background-color: var(--color-primary-contrastText);
+  color: var(--color-primary);
+}
+
+.newPostError {
+  color: var(--color-error);
 }
