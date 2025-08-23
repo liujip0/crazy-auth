@@ -29,13 +29,16 @@ export default function LogIn() {
   const submitUsernameRef = useRef<HTMLButtonElement>(null);
 
   const checkusername = useMutation(trpc.users.checkUsername.mutationOptions());
+  const [loginError, setLoginError] = useState("");
   const login = useMutation(
     trpc.users.login.mutationOptions({
       onSuccess(data) {
         localStorage.setItem(LOCAL_STORAGE_KEYS.apiToken, data);
         navigate("/");
       },
-      onError(error) {},
+      onError(error) {
+        setLoginError("Error: " + error.message);
+      },
     })
   );
 
@@ -93,6 +96,7 @@ export default function LogIn() {
         : <PasswordEditor
             onDone={(value) => {
               setPassword(value);
+              setLoginError("");
             }}
           />
         }
@@ -115,11 +119,13 @@ export default function LogIn() {
                     />
                   ))}
             </div>
+            {loginError && <p className={styles.errorMessage}>{loginError}</p>}
           </DialogContent>
           <DialogActions>
             <Button
               onClick={() => {
                 setPassword("");
+                setLoginError("");
               }}>
               Back
             </Button>
