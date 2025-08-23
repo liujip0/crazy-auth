@@ -17,7 +17,9 @@ export default function TopBar({ buttons }: TopBarProps) {
             <Link to="signup">
               <Button className={styles.button}>Sign Up</Button>
             </Link>
-            <Button className={styles.button}>Log In</Button>
+            <Link to="login">
+              <Button className={styles.button}>Log In</Button>
+            </Link>
           </>
         : buttons === "none" ?
           <></>

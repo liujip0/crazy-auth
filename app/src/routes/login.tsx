@@ -18,7 +18,7 @@ import TopBar from "../components/TopBar/TopBar.tsx";
 import { trpc } from "../trpc.ts";
 import styles from "./login.module.css";
 
-export default function SignUp() {
+export default function LogIn() {
   const navigate = useNavigate();
 
   const [page, setPage] = useState<"username" | "password">("username");
@@ -39,7 +39,7 @@ export default function SignUp() {
           <>
             <h1 className={styles.title}>Log In</h1>
             <Input
-              id="signup-username"
+              id="login-username"
               value={username}
               onChange={(value) => {
                 setUsername(value);
@@ -62,20 +62,20 @@ export default function SignUp() {
               className={styles.button}
               onClick={async () => {
                 if (username.length <= 3) {
-                  setUsernameError("Username must be at least 3 characters");
+                  setUsernameError("Username is invalid");
                   return;
                 }
                 const check = await checkusername.mutateAsync(username);
                 switch (check) {
                   case "ok":
-                    setUsernameError("");
-                    setPage("password");
+                    setUsernameError("Username is invalid");
                     break;
                   case "invalid":
                     setUsernameError("Username is invalid");
                     break;
                   case "taken":
-                    setUsernameError("Username is already taken");
+                    setUsernameError("");
+                    setPage("password");
                     break;
                 }
               }}>
