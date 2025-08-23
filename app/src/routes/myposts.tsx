@@ -6,9 +6,9 @@ import NewPost from "../components/NewPost/NewPost.tsx";
 import Post from "../components/Post/Post.tsx";
 import TopBar from "../components/TopBar/TopBar.tsx";
 import { LOCAL_STORAGE_KEYS, trpc } from "../trpc.ts";
-import styles from "./index.module.css";
+import styles from "./myposts.module.css";
 
-export default function Index() {
+export default function MyPosts() {
   const navigate = useNavigate();
 
   const userInfo = useQuery(
@@ -21,6 +21,7 @@ export default function Index() {
     trpc.posts.getPosts.queryOptions({
       limit: 20,
       offset: 0,
+      user: userInfo.data?.username,
     })
   );
 
@@ -28,9 +29,10 @@ export default function Index() {
 
   return (
     <div className={styles.container}>
-      <TopBar buttons={userInfo.data ? userInfo.data.username : "loggedout"} />
+      <TopBar buttons={userInfo.data?.username || "loggedout"} />
       <div className={styles.content}>
         <div className={styles.feed}>
+          <h1 className={styles.title}>My Posts</h1>
           {getPosts.data?.map((post) => (
             <Post
               title={post.title}
@@ -40,15 +42,13 @@ export default function Index() {
           ))}
         </div>
 
-        {userInfo.data && (
-          <Button
-            className={styles.newPostButton}
-            onClick={() => {
-              setNewPost(true);
-            }}>
-            <span className="material-symbols-outlined">add</span>Create Post
-          </Button>
-        )}
+        <Button
+          className={styles.newPostButton}
+          onClick={() => {
+            setNewPost(true);
+          }}>
+          <span className="material-symbols-outlined">add</span>Create Post
+        </Button>
       </div>
 
       <NewPost

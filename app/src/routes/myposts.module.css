@@ -24,6 +24,12 @@
   overflow-y: scroll;
 }
 
+.title {
+  font-family: var(--text-font-family);
+  font-size: var(--text-h1-size);
+  color: var(--color-background-contrastText);
+}
+
 .newPostButton {
   position: absolute;
   bottom: 24px;

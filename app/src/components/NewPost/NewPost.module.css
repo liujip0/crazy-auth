@@ -1,0 +1,16 @@
+.newPostDialogContent {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.newPostDialogButton {
+  flex: 1;
+
+  background-color: var(--color-primary-contrastText);
+  color: var(--color-primary);
+}
+
+.newPostError {
+  color: var(--color-error);
+}

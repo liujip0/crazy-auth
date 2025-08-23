@@ -17,10 +17,10 @@ export default function TopBar({ buttons }: TopBarProps) {
       <div className={styles.buttons}>
         {buttons === "loggedout" ?
           <>
-            <Link to="signup">
+            <Link to="/signup">
               <Button className={styles.button}>Sign Up</Button>
             </Link>
-            <Link to="login">
+            <Link to="/login">
               <Button className={styles.button}>Log In</Button>
             </Link>
           </>
@@ -33,7 +33,7 @@ export default function TopBar({ buttons }: TopBarProps) {
                 {buttons}
               </p>
               <Link
-                to=""
+                to="/myposts"
                 className={styles.myPostsLink}>
                 My Posts
               </Link>
@@ -42,8 +42,8 @@ export default function TopBar({ buttons }: TopBarProps) {
               className={styles.button}
               onClick={() => {
                 localStorage.removeItem(LOCAL_STORAGE_KEYS.apiToken);
-                navigate("/");
                 navigate(0);
+                navigate("/");
               }}>
               Log Out
             </Button>
