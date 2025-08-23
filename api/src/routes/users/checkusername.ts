@@ -4,7 +4,7 @@ import { publicProcedure } from "../../trpc.ts";
 
 export type UsernameStatus = "ok" | "taken" | "invalid";
 
-export const checkusername = publicProcedure
+export const checkUsername = publicProcedure
   .input(z.string())
   .mutation(async (opts) => {
     const existingEntries = await opts.ctx.env.DB.prepare(

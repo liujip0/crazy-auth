@@ -15,7 +15,7 @@ import PasswordEditor, {
   OS_SEPARATOR,
 } from "../components/PasswordEditor/PasswordEditor.tsx";
 import TopBar from "../components/TopBar/TopBar.tsx";
-import { trpc } from "../trpc.ts";
+import { LOCAL_STORAGE_KEYS, trpc } from "../trpc.ts";
 import styles from "./login.module.css";
 
 export default function LogIn() {
@@ -28,8 +28,16 @@ export default function LogIn() {
 
   const submitUsernameRef = useRef<HTMLButtonElement>(null);
 
-  const checkusername = useMutation(trpc.users.checkusername.mutationOptions());
-  const signup = useMutation(trpc.users.signup.mutationOptions());
+  const checkusername = useMutation(trpc.users.checkUsername.mutationOptions());
+  const login = useMutation(
+    trpc.users.login.mutationOptions({
+      onSuccess(data) {
+        localStorage.setItem(LOCAL_STORAGE_KEYS.apiToken, data);
+        navigate("/");
+      },
+      onError(error) {},
+    })
+  );
 
   return (
     <div className={styles.container}>
@@ -113,15 +121,14 @@ export default function LogIn() {
               onClick={() => {
                 setPassword("");
               }}>
-              Cancel
+              Back
             </Button>
             <Button
               onClick={() => {
-                signup.mutate({
+                login.mutate({
                   username,
                   password,
                 });
-                navigate("/");
               }}>
               Confirm
             </Button>

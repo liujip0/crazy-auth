@@ -1,8 +1,12 @@
 import { router } from "../../trpc.ts";
-import { checkusername } from "./checkusername.ts";
+import { checkUsername } from "./checkUsername.ts";
+import { login } from "./login.ts";
 import { signup } from "./signup.ts";
+import { userInfo } from "./userInfo.ts";
 
 export const usersRouter = router({
-  signup: signup,
-  checkusername: checkusername,
+  signup,
+  checkUsername,
+  login,
+  userInfo,
 });

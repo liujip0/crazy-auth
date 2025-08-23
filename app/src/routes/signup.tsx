@@ -28,7 +28,7 @@ export default function SignUp() {
 
   const submitUsernameRef = useRef<HTMLButtonElement>(null);
 
-  const checkusername = useMutation(trpc.users.checkusername.mutationOptions());
+  const checkusername = useMutation(trpc.users.checkUsername.mutationOptions());
   const signup = useMutation(
     trpc.users.signup.mutationOptions({
       onSuccess: () => {
@@ -119,7 +119,7 @@ export default function SignUp() {
               onClick={() => {
                 setPassword("");
               }}>
-              Cancel
+              Back
             </Button>
             <Button
               onClick={() => {

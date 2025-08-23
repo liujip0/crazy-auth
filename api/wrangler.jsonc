@@ -3,6 +3,7 @@
   "name": "crazy-auth-api",
   "main": "src/index.ts",
   "compatibility_date": "2025-08-01",
+  "compatibility_flags": ["nodejs_compat"],
   "d1_databases": [
     {
       "binding": "DB",

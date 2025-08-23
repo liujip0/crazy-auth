@@ -8,6 +8,8 @@ import { appRouter } from "./routes/routes.ts";
 
 export interface Env {
   DB: D1Database;
+
+  JWT_SECRET: string;
 }
 
 export default {
