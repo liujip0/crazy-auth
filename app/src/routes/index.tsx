@@ -1,3 +1,4 @@
+import { Button } from "@liujip0/components";
 import { skipToken, useQuery } from "@tanstack/react-query";
 import Post from "../components/Post/Post.tsx";
 import TopBar from "../components/TopBar/TopBar.tsx";
@@ -21,6 +22,12 @@ export default function Index() {
           <Post />
           <Post />
         </div>
+
+        {userInfo.data && (
+          <Button className={styles.newPostButton}>
+            <span className="material-symbols-outlined">add</span>Create Post
+          </Button>
+        )}
       </div>
     </div>
   );

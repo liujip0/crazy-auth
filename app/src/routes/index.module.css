@@ -22,3 +22,13 @@
 
   overflow-y: scroll;
 }
+
+.newPostButton {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+
+  background-color: var(--color-primary);
+  color: var(--color-primary-contrastText);
+  border: var(--border-radius) solid var(--color-secondary);
+}

@@ -28,8 +28,15 @@ export default function TopBar({ buttons }: TopBarProps) {
           <></>
         : <>
             <div className={styles.userContainer}>
-              <span className={styles.userLabel}>Username: </span>
-              {buttons}
+              <p className={styles.userLabelContainer}>
+                <span className={styles.userLabel}>Username: </span>
+                {buttons}
+              </p>
+              <Link
+                to=""
+                className={styles.myPostsLink}>
+                My Posts
+              </Link>
             </div>
             <Button
               className={styles.button}

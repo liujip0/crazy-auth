@@ -29,7 +29,11 @@
 
 .userContainer {
   margin-right: 16px;
+  display: flex;
+  flex-direction: column;
+}
 
+.userLabelContainer {
   font-family: var(--text-font-family);
   font-size: var(--text-h2-size);
   color: var(--color-primary-contrastText);
@@ -37,4 +41,9 @@
 
 .userLabel {
   font-style: italic;
+}
+
+.myPostsLink {
+  font-family: var(--text-font-family);
+  font-size: var(--text-label-size);
 }
