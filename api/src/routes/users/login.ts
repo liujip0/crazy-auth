@@ -45,7 +45,6 @@ export const login = publicProcedure
       });
     }
 
-    console.log(opts.ctx.env.JWT_SECRET);
     const jwtToken = jwt.sign(
       {
         username: user.results[0].username,
