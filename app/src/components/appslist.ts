@@ -13,7 +13,7 @@ export const MAC_APPS = {
   "Microsoft Word": "webp",
   Music: "webp",
   Safari: "webp",
-  "System Preferences": "png",
+  "System Preferences": "webp",
   Weather: "webp",
   Xcode: "webp",
   "Zen Browser": "webp",
