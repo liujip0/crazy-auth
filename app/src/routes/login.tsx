@@ -9,10 +9,13 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import PasswordEditor, {
+import {
   ITEM_SEPARATOR,
-  MacIcon,
   OS_SEPARATOR,
+  type MAC_APPS,
+} from "../components/appslist.ts";
+import PasswordEditor, {
+  MacIcon,
 } from "../components/PasswordEditor/PasswordEditor.tsx";
 import TopBar from "../components/TopBar/TopBar.tsx";
 import { LOCAL_STORAGE_KEYS, trpc } from "../trpc.ts";
@@ -115,7 +118,7 @@ export default function LogIn() {
                   .map((app) => (
                     <MacIcon
                       key={app}
-                      icon={app}
+                      icon={app as keyof typeof MAC_APPS}
                     />
                   ))}
             </div>

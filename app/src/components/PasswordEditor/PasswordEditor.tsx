@@ -1,30 +1,14 @@
 import { Button } from "@liujip0/components";
 import React, { useState } from "react";
+import { ITEM_SEPARATOR, MAC_APPS, OS_SEPARATOR } from "../appslist.ts";
 import styles from "./PasswordEditor.module.css";
-
-const MAC_APPS = [
-  "Calculator",
-  "Chrome",
-  "Facetime",
-  "Finder",
-  "Firefox",
-  "Mail",
-  "Messages",
-  "Music",
-  "Safari",
-  "System Preferences",
-  "Weather",
-  "Zen Browser",
-];
-export const OS_SEPARATOR = "***";
-export const ITEM_SEPARATOR = "//";
 
 type PasswordEditorProps = {
   onDone?: (value: string) => void;
 };
 export default function PasswordEditor({ onDone }: PasswordEditorProps) {
   const [os, setOs] = useState<"mac" | "">("");
-  const [dockApps, setDockApps] = useState<string[]>([]);
+  const [dockApps, setDockApps] = useState<(keyof typeof MAC_APPS)[]>([]);
   const [leftDragHover, setLeftDragHover] = useState(false);
   const [rightDragHover, setRightDragHover] = useState(false);
 
@@ -62,12 +46,12 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                   const icon = event.dataTransfer.getData("text/plain");
                   setDockApps(dockApps.filter((app) => app !== icon));
                 }}>
-                {MAC_APPS.map((app) =>
-                  dockApps.includes(app) ?
+                {Object.keys(MAC_APPS).map((app) =>
+                  dockApps.includes(app as keyof typeof MAC_APPS) ?
                     <React.Fragment key={app}></React.Fragment>
                   : <MacIcon
                       key={app}
-                      icon={app}
+                      icon={app as keyof typeof MAC_APPS}
                     />
                 )}
               </div>
@@ -91,14 +75,14 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                     setLeftDragHover(false);
 
                     const icon = event.dataTransfer.getData("text/plain");
-                    if (!dockApps.includes(icon)) {
-                      setDockApps([icon, ...dockApps]);
+                    if (!dockApps.includes(icon as keyof typeof MAC_APPS)) {
+                      setDockApps([icon as keyof typeof MAC_APPS, ...dockApps]);
                     }
                   }}></div>
                 {dockApps.map((app, index) => (
                   <MacIcon
                     key={app}
-                    icon={app}
+                    icon={app as keyof typeof MAC_APPS}
                     index={index}
                     dockApps={dockApps}
                     setDockApps={setDockApps}
@@ -123,8 +107,8 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                     setRightDragHover(false);
 
                     const icon = event.dataTransfer.getData("text/plain");
-                    if (!dockApps.includes(icon)) {
-                      setDockApps([...dockApps, icon]);
+                    if (!dockApps.includes(icon as keyof typeof MAC_APPS)) {
+                      setDockApps([...dockApps, icon as keyof typeof MAC_APPS]);
                     }
                   }}></div>
               </div>
@@ -148,10 +132,10 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
 }
 
 export type MacIconProps = {
-  icon: (typeof MAC_APPS)[number];
+  icon: keyof typeof MAC_APPS;
   index?: number;
   dockApps?: string[];
-  setDockApps?: (value: string[]) => void;
+  setDockApps?: (value: (keyof typeof MAC_APPS)[]) => void;
 };
 export function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
   const [dragHover, setDragHover] = useState(false);
@@ -185,17 +169,23 @@ export function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
             const newDockApps = dockApps.filter((app) => app !== droppedIcon);
             newDockApps.splice(index, 0, droppedIcon);
 
-            setDockApps(newDockApps);
+            setDockApps(newDockApps as (keyof typeof MAC_APPS)[]);
           } else {
             const newDockApps = dockApps.filter((app) => app !== droppedIcon);
             newDockApps.splice(index + 1, 0, droppedIcon);
 
-            setDockApps(newDockApps);
+            setDockApps(newDockApps as (keyof typeof MAC_APPS)[]);
           }
         }
       }}>
       <img
-        src={import.meta.env.BASE_URL + "assets/appicons/mac/" + icon + ".png"}
+        src={
+          import.meta.env.BASE_URL +
+          "assets/appicons/mac/" +
+          icon +
+          "." +
+          MAC_APPS[icon]
+        }
         className={styles.macIcon}
         draggable={false}
       />
