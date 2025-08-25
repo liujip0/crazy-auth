@@ -10,6 +10,8 @@ Instead of users creating a password like normal, this app has them choose an OS
 
 Internally, the OS name and the app names are concatenated together, then treated as a normal password.
 
+If your taskbar contains an application that is currently not supported, feel free to create a GitHub issue and suggest it!
+
 ## Technologies used
 
 For this project, I used Vite + TS + React to make the frontend, and Cloudflare Workers + TS to make the backend. The communication between them is done using tRPC.
