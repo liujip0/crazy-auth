@@ -15,7 +15,7 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
   const [os, setOs] = useState<"mac" | "windows" | "">("");
   const [dockApps, setDockApps] = useState<(keyof typeof MAC_APPS)[]>([]);
   const [taskbarApps, setTaskbarApps] = useState<(keyof typeof WINDOWS_APPS)[]>(
-    []
+    ["Start", "Widgets"]
   );
   const [leftDragHover, setLeftDragHover] = useState(false);
   const [rightDragHover, setRightDragHover] = useState(false);
