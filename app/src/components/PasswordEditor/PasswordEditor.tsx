@@ -1,5 +1,5 @@
 import { Button } from "@liujip0/components";
-import React, { useState } from "react";
+import React, { Suspense, useState } from "react";
 import {
   ITEM_SEPARATOR,
   MAC_APPS,
@@ -62,24 +62,26 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                 setTaskbarApps(taskbarApps.filter((app) => app !== icon));
               }
             }}>
-            {os === "mac" ?
-              Object.keys(MAC_APPS).map((app) =>
-                dockApps.includes(app as keyof typeof MAC_APPS) ?
-                  <React.Fragment key={app}></React.Fragment>
-                : <MacIcon
-                    key={app}
-                    icon={app as keyof typeof MAC_APPS}
-                  />
-              )
-            : Object.keys(WINDOWS_APPS).map((app) =>
-                taskbarApps.includes(app as keyof typeof WINDOWS_APPS) ?
-                  <React.Fragment key={app}></React.Fragment>
-                : <WindowsIcon
-                    key={app}
-                    icon={app as keyof typeof WINDOWS_APPS}
-                  />
-              )
-            }
+            <Suspense fallback={<div>Loading icons...</div>}>
+              {os === "mac" ?
+                Object.keys(MAC_APPS).map((app) =>
+                  dockApps.includes(app as keyof typeof MAC_APPS) ?
+                    <React.Fragment key={app}></React.Fragment>
+                  : <MacIcon
+                      key={app}
+                      icon={app as keyof typeof MAC_APPS}
+                    />
+                )
+              : Object.keys(WINDOWS_APPS).map((app) =>
+                  taskbarApps.includes(app as keyof typeof WINDOWS_APPS) ?
+                    <React.Fragment key={app}></React.Fragment>
+                  : <WindowsIcon
+                      key={app}
+                      icon={app as keyof typeof WINDOWS_APPS}
+                    />
+                )
+              }
+            </Suspense>
           </div>
           <div className={os === "mac" ? styles.dock : styles.taskbar}>
             <div
@@ -113,26 +115,28 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                   ]);
                 }
               }}></div>
-            {os === "mac" ?
-              dockApps.map((app, index) => (
-                <MacIcon
-                  key={app}
-                  icon={app as keyof typeof MAC_APPS}
-                  index={index}
-                  dockApps={dockApps}
-                  setDockApps={setDockApps}
-                />
-              ))
-            : taskbarApps.map((app, index) => (
-                <WindowsIcon
-                  key={app}
-                  icon={app as keyof typeof WINDOWS_APPS}
-                  index={index}
-                  taskbarApps={taskbarApps}
-                  setTaskbarApps={setTaskbarApps}
-                />
-              ))
-            }
+            <Suspense fallback={<div>Loading icons...</div>}>
+              {os === "mac" ?
+                dockApps.map((app, index) => (
+                  <MacIcon
+                    key={app}
+                    icon={app as keyof typeof MAC_APPS}
+                    index={index}
+                    dockApps={dockApps}
+                    setDockApps={setDockApps}
+                  />
+                ))
+              : taskbarApps.map((app, index) => (
+                  <WindowsIcon
+                    key={app}
+                    icon={app as keyof typeof WINDOWS_APPS}
+                    index={index}
+                    taskbarApps={taskbarApps}
+                    setTaskbarApps={setTaskbarApps}
+                  />
+                ))
+              }
+            </Suspense>
             <div
               className={
                 (os === "mac" ? styles.dockSpacer : styles.taskbarSpacerRight) +
