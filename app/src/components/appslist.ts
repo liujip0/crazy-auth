@@ -28,7 +28,7 @@ export const MAC_APPS = {
   "GitHub Desktop": "webp",
   "Google Drive": "webp",
   "GPG Keychain": "webp",
-  Handbrake: "webp",
+  HandBrake: "webp",
   "HBO Max": "webp",
   Hyper: "webp",
   ImageGlass: "webp",

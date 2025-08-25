@@ -1,5 +1,5 @@
 import { Button } from "@liujip0/components";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   ITEM_SEPARATOR,
   MAC_APPS,
@@ -19,10 +19,89 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
   );
   const [leftDragHover, setLeftDragHover] = useState(false);
   const [rightDragHover, setRightDragHover] = useState(false);
-  const macRefs = useRef<HTMLImageElement>([]);
-  const windowsRefs = useRef([]);
-  const [loadedImages, setLoadedImages] = useState(0);
-  console.log(loadedImages, Object.keys(WINDOWS_APPS).length);
+  const [imagesLoaded, setImagesLoaded] = useState(false);
+
+  useEffect(() => {
+    const checkImageLoad = setInterval(() => {
+      if (os === "mac") {
+        console.log(
+          Object.keys(MAC_APPS).reduce(
+            (accumulator, app) =>
+              accumulator +
+              ((
+                (
+                  document.getElementById(
+                    "mac-icon-" + app.replaceAll(" ", "")
+                  )! as HTMLImageElement
+                ).complete
+              ) ?
+                1
+              : 0),
+            0
+          )
+        );
+        if (
+          Object.keys(MAC_APPS).reduce(
+            (accumulator, app) =>
+              accumulator +
+              ((
+                (
+                  document.getElementById(
+                    "mac-icon-" + app.replaceAll(" ", "")
+                  )! as HTMLImageElement
+                ).complete
+              ) ?
+                1
+              : 0),
+            0
+          ) >= Object.keys(MAC_APPS).length
+        ) {
+          setImagesLoaded(true);
+          clearInterval(checkImageLoad);
+        }
+      } else {
+        console.log(
+          Object.keys(WINDOWS_APPS).reduce(
+            (accumulator, app) =>
+              accumulator +
+              ((
+                (
+                  document.getElementById(
+                    "windows-icon-" + app.replaceAll(" ", "")
+                  )! as HTMLImageElement
+                ).complete
+              ) ?
+                1
+              : 0),
+            0
+          )
+        );
+        if (
+          Object.keys(WINDOWS_APPS).reduce(
+            (accumulator, app) =>
+              accumulator +
+              ((
+                (
+                  document.getElementById(
+                    "windows-icon-" + app.replaceAll(" ", "")
+                  )! as HTMLImageElement
+                ).complete
+              ) ?
+                1
+              : 0),
+            0
+          ) >= Object.keys(WINDOWS_APPS).length
+        ) {
+          setImagesLoaded(true);
+          clearInterval(checkImageLoad);
+        }
+      }
+    }, 500);
+
+    return () => {
+      clearInterval(checkImageLoad);
+    };
+  }, [os]);
 
   return (
     <div className={styles.container}>
@@ -66,37 +145,29 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                 setTaskbarApps(taskbarApps.filter((app) => app !== icon));
               }
             }}>
+            {!imagesLoaded && (
+              <div className={styles.loadingText}>Loading Icons...</div>
+            )}
             {os === "mac" ?
-              Object.keys(MAC_APPS).map((app, keyIndex) =>
+              Object.keys(MAC_APPS).map((app) =>
                 dockApps.includes(app as keyof typeof MAC_APPS) ?
                   <React.Fragment key={app}></React.Fragment>
                 : <MacIcon
-                    ref={macRefs[keyIndex]}
+                    id={"mac-icon-" + app.replaceAll(" ", "")}
                     key={app}
                     icon={app as keyof typeof MAC_APPS}
-                    onLoad={() => {
-                      setLoadedImages(loadedImages + 1);
-                    }}
                   />
               )
             : Object.keys(WINDOWS_APPS).map((app) =>
                 taskbarApps.includes(app as keyof typeof WINDOWS_APPS) ?
                   <React.Fragment key={app}></React.Fragment>
                 : <WindowsIcon
+                    id={"windows-icon-" + app.replaceAll(" ", "")}
                     key={app}
                     icon={app as keyof typeof WINDOWS_APPS}
-                    onLoad={() => {
-                      setLoadedImages(loadedImages + 1);
-                    }}
                   />
               )
             }
-            {loadedImages <
-              (os === "mac" ?
-                Object.keys(MAC_APPS).length
-              : Object.keys(WINDOWS_APPS).length) && (
-              <div className={styles.loadingText}>Loading Icons...</div>
-            )}
           </div>
           <div className={os === "mac" ? styles.dock : styles.taskbar}>
             <div
@@ -133,33 +204,26 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
             {os === "mac" ?
               dockApps.map((app, index) => (
                 <MacIcon
+                  id={"mac-icon-" + app.replaceAll(" ", "")}
                   key={app}
                   icon={app as keyof typeof MAC_APPS}
                   index={index}
                   dockApps={dockApps}
                   setDockApps={setDockApps}
-                  onLoad={() => {
-                    setLoadedImages(loadedImages + 1);
-                  }}
                 />
               ))
             : taskbarApps.map((app, index) => (
                 <WindowsIcon
+                  id={"windows-icon-" + app.replaceAll(" ", "")}
                   key={app}
                   icon={app as keyof typeof WINDOWS_APPS}
                   index={index}
                   taskbarApps={taskbarApps}
                   setTaskbarApps={setTaskbarApps}
-                  onLoad={() => {
-                    setLoadedImages(loadedImages + 1);
-                  }}
                 />
               ))
             }
-            {loadedImages <
-              (os === "mac" ?
-                Object.keys(MAC_APPS).length
-              : Object.keys(WINDOWS_APPS).length) && (
+            {!imagesLoaded && (
               <div className={styles.loadingText}>Loading Icons...</div>
             )}
             <div
@@ -220,14 +284,14 @@ export type MacIconProps = {
   index?: number;
   dockApps?: string[];
   setDockApps?: (value: (keyof typeof MAC_APPS)[]) => void;
-  onLoad?: () => void;
+  id?: string;
 };
 export function MacIcon({
   icon,
   index,
   dockApps,
   setDockApps,
-  onLoad,
+  id,
 }: MacIconProps) {
   const [dragHover, setDragHover] = useState(false);
 
@@ -269,6 +333,7 @@ export function MacIcon({
         }
       }}>
       <img
+        id={id}
         src={
           import.meta.env.BASE_URL +
           "assets/appicons/mac/" +
@@ -278,9 +343,6 @@ export function MacIcon({
         }
         className={styles.macIconImage}
         draggable={false}
-        onLoad={() => {
-          onLoad?.();
-        }}
       />
     </div>
   );
@@ -291,14 +353,14 @@ export type WindowsIconProps = {
   index?: number;
   taskbarApps?: string[];
   setTaskbarApps?: (value: (keyof typeof WINDOWS_APPS)[]) => void;
-  onLoad?: () => void;
+  id?: string;
 };
 export function WindowsIcon({
   icon,
   index,
   taskbarApps,
   setTaskbarApps,
-  onLoad,
+  id,
 }: WindowsIconProps) {
   const [dragHover, setDragHover] = useState(false);
 
@@ -344,6 +406,7 @@ export function WindowsIcon({
         }
       }}>
       <img
+        id={id}
         src={
           import.meta.env.BASE_URL +
           "assets/appicons/windows/" +
@@ -353,9 +416,6 @@ export function WindowsIcon({
         }
         className={styles.macIconImage}
         draggable={false}
-        onLoad={() => {
-          onLoad?.();
-        }}
       />
     </div>
   );
