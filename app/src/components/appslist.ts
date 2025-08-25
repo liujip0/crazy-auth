@@ -32,5 +32,30 @@ export const MAC_APPS = {
   Xcode: "webp",
   "Zen Browser": "webp",
 };
+
+export const WINDOWS_APPS = {
+  "Control Panel": "webp",
+  "Edge Beta": "webp",
+  "Edge Canary": "webp",
+  "Edge Developer": "webp",
+  Edge: "webp",
+  OneDrive: "webp",
+  Planner: "webp",
+  PowerToys: "webp",
+  "Remote Desktop": "webp",
+  Search: "webp",
+  Settings: "webp",
+  Start: "webp",
+  Stream: "webp",
+  Tasks: "webp",
+  Teams: "webp",
+  TV: "webp",
+  "Visual Blend": "webp",
+  "Visual Studio Code": "webp",
+  "Visual Studio Preview": "webp",
+  "Visual Studio": "webp",
+  Widgets: "webp",
+};
+
 export const OS_SEPARATOR = "***";
 export const ITEM_SEPARATOR = "//";

@@ -1,131 +1,186 @@
 import { Button } from "@liujip0/components";
 import React, { useState } from "react";
-import { ITEM_SEPARATOR, MAC_APPS, OS_SEPARATOR } from "../appslist.ts";
+import {
+  ITEM_SEPARATOR,
+  MAC_APPS,
+  OS_SEPARATOR,
+  WINDOWS_APPS,
+} from "../appslist.ts";
 import styles from "./PasswordEditor.module.css";
 
 type PasswordEditorProps = {
   onDone?: (value: string) => void;
 };
 export default function PasswordEditor({ onDone }: PasswordEditorProps) {
-  const [os, setOs] = useState<"mac" | "">("");
+  const [os, setOs] = useState<"mac" | "windows" | "">("");
   const [dockApps, setDockApps] = useState<(keyof typeof MAC_APPS)[]>([]);
+  const [taskbarApps, setTaskbarApps] = useState<(keyof typeof WINDOWS_APPS)[]>(
+    []
+  );
   const [leftDragHover, setLeftDragHover] = useState(false);
   const [rightDragHover, setRightDragHover] = useState(false);
 
   return (
     <div className={styles.container}>
-      {
-        {
-          "": (
-            <>
-              <h1 className={styles.selectOsTitle}>Select OS</h1>
-              <div className={styles.selectOs}>
-                <Button
-                  onClick={() => {
-                    setOs("mac");
-                  }}>
-                  Mac
-                </Button>
-              </div>
-            </>
-          ),
-          mac: (
-            <>
-              <p className={styles.instructions}>
-                Enter your password by dragging apps into the dock below.
-              </p>
-              <div
-                className={styles.desktop}
-                onDragOver={(event) => {
-                  event.preventDefault();
-                  event.dataTransfer.dropEffect = "move";
-                }}
-                onDrop={(event) => {
-                  event.preventDefault();
+      {os === "" ?
+        <>
+          <h1 className={styles.selectOsTitle}>Select OS</h1>
+          <div className={styles.selectOs}>
+            <Button
+              onClick={() => {
+                setOs("mac");
+              }}>
+              Mac
+            </Button>
+            <Button
+              onClick={() => {
+                setOs("windows");
+              }}>
+              Windows
+            </Button>
+          </div>
+        </>
+      : <>
+          <p className={styles.instructions}>
+            Enter your password by dragging apps into the
+            {os === "mac" ? " dock " : " taskbar "}
+            below.
+          </p>
+          <div
+            className={styles.desktop}
+            onDragOver={(event) => {
+              event.preventDefault();
+              event.dataTransfer.dropEffect = "move";
+            }}
+            onDrop={(event) => {
+              event.preventDefault();
 
-                  const icon = event.dataTransfer.getData("text/plain");
-                  setDockApps(dockApps.filter((app) => app !== icon));
-                }}>
-                {Object.keys(MAC_APPS).map((app) =>
-                  dockApps.includes(app as keyof typeof MAC_APPS) ?
-                    <React.Fragment key={app}></React.Fragment>
-                  : <MacIcon
-                      key={app}
-                      icon={app as keyof typeof MAC_APPS}
-                    />
-                )}
-              </div>
-              <div className={styles.dock}>
-                <div
-                  className={
-                    styles.dockSpacer +
-                    " " +
-                    (leftDragHover ? styles.dockSpacerLeftDragHover : "")
-                  }
-                  onDragOver={(event) => {
-                    event.preventDefault();
-                    event.dataTransfer.dropEffect = "move";
-                    setLeftDragHover(true);
-                  }}
-                  onDragLeave={() => {
-                    setLeftDragHover(false);
-                  }}
-                  onDrop={(event) => {
-                    event.preventDefault();
-                    setLeftDragHover(false);
-
-                    const icon = event.dataTransfer.getData("text/plain");
-                    if (!dockApps.includes(icon as keyof typeof MAC_APPS)) {
-                      setDockApps([icon as keyof typeof MAC_APPS, ...dockApps]);
-                    }
-                  }}></div>
-                {dockApps.map((app, index) => (
-                  <MacIcon
+              const icon = event.dataTransfer.getData("text/plain");
+              if (os === "mac") {
+                setDockApps(dockApps.filter((app) => app !== icon));
+              } else {
+                setTaskbarApps(taskbarApps.filter((app) => app !== icon));
+              }
+            }}>
+            {os === "mac" ?
+              Object.keys(MAC_APPS).map((app) =>
+                dockApps.includes(app as keyof typeof MAC_APPS) ?
+                  <React.Fragment key={app}></React.Fragment>
+                : <MacIcon
                     key={app}
                     icon={app as keyof typeof MAC_APPS}
-                    index={index}
-                    dockApps={dockApps}
-                    setDockApps={setDockApps}
                   />
-                ))}
-                <div
-                  className={
-                    styles.dockSpacer +
-                    " " +
-                    (rightDragHover ? styles.dockSpacerRightDragHover : "")
-                  }
-                  onDragOver={(event) => {
-                    event.preventDefault();
-                    event.dataTransfer.dropEffect = "move";
-                    setRightDragHover(true);
-                  }}
-                  onDragLeave={() => {
-                    setRightDragHover(false);
-                  }}
-                  onDrop={(event) => {
-                    event.preventDefault();
-                    setRightDragHover(false);
+              )
+            : Object.keys(WINDOWS_APPS).map((app) =>
+                taskbarApps.includes(app as keyof typeof WINDOWS_APPS) ?
+                  <React.Fragment key={app}></React.Fragment>
+                : <WindowsIcon
+                    key={app}
+                    icon={app as keyof typeof WINDOWS_APPS}
+                  />
+              )
+            }
+          </div>
+          <div className={os === "mac" ? styles.dock : styles.taskbar}>
+            <div
+              className={
+                (os === "mac" ? styles.dockSpacer : styles.taskbarSpacerLeft) +
+                " " +
+                (leftDragHover ? styles.dockSpacerLeftDragHover : "")
+              }
+              onDragOver={(event) => {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+                setLeftDragHover(true);
+              }}
+              onDragLeave={() => {
+                setLeftDragHover(false);
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                setLeftDragHover(false);
 
-                    const icon = event.dataTransfer.getData("text/plain");
-                    if (!dockApps.includes(icon as keyof typeof MAC_APPS)) {
-                      setDockApps([...dockApps, icon as keyof typeof MAC_APPS]);
-                    }
-                  }}></div>
-              </div>
-              <Button
-                className={styles.doneButton}
-                onClick={() => {
-                  if (onDone) {
-                    onDone(
-                      "mac" + OS_SEPARATOR + dockApps.join(ITEM_SEPARATOR)
-                    );
-                  }
-                }}>
-                Submit
-              </Button>
-            </>
-          ),
-        }[os]
+                const icon = event.dataTransfer.getData("text/plain");
+                if (os === "mac") {
+                  setDockApps([
+                    icon as keyof typeof MAC_APPS,
+                    ...dockApps.filter((app) => app !== icon),
+                  ]);
+                } else {
+                  setTaskbarApps([
+                    icon as keyof typeof WINDOWS_APPS,
+                    ...taskbarApps.filter((app) => app !== icon),
+                  ]);
+                }
+              }}></div>
+            {os === "mac" ?
+              dockApps.map((app, index) => (
+                <MacIcon
+                  key={app}
+                  icon={app as keyof typeof MAC_APPS}
+                  index={index}
+                  dockApps={dockApps}
+                  setDockApps={setDockApps}
+                />
+              ))
+            : taskbarApps.map((app, index) => (
+                <WindowsIcon
+                  key={app}
+                  icon={app as keyof typeof WINDOWS_APPS}
+                  index={index}
+                  taskbarApps={taskbarApps}
+                  setTaskbarApps={setTaskbarApps}
+                />
+              ))
+            }
+            <div
+              className={
+                (os === "mac" ? styles.dockSpacer : styles.taskbarSpacerRight) +
+                " " +
+                (rightDragHover ? styles.dockSpacerRightDragHover : "")
+              }
+              onDragOver={(event) => {
+                event.preventDefault();
+                event.dataTransfer.dropEffect = "move";
+                setRightDragHover(true);
+              }}
+              onDragLeave={() => {
+                setRightDragHover(false);
+              }}
+              onDrop={(event) => {
+                event.preventDefault();
+                setRightDragHover(false);
+
+                const icon = event.dataTransfer.getData("text/plain");
+                if (os === "mac") {
+                  setDockApps([
+                    ...dockApps.filter((app) => app !== icon),
+                    icon as keyof typeof MAC_APPS,
+                  ]);
+                } else {
+                  setTaskbarApps([
+                    ...taskbarApps.filter((app) => app !== icon),
+                    icon as keyof typeof WINDOWS_APPS,
+                  ]);
+                }
+              }}></div>
+          </div>
+          <Button
+            className={styles.doneButton}
+            onClick={() => {
+              if (onDone) {
+                if (os === "mac") {
+                  onDone("mac" + OS_SEPARATOR + dockApps.join(ITEM_SEPARATOR));
+                } else {
+                  onDone(
+                    "windows" + OS_SEPARATOR + taskbarApps.join(ITEM_SEPARATOR)
+                  );
+                }
+              }
+            }}>
+            Submit
+          </Button>
+        </>
       }
     </div>
   );
@@ -158,7 +213,6 @@ export function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
         setDragHover(false);
       }}
       onDrop={(event) => {
-        event.stopPropagation();
         event.preventDefault();
         setDragHover(false);
 
@@ -186,7 +240,77 @@ export function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
           "." +
           MAC_APPS[icon]
         }
-        className={styles.macIcon}
+        className={styles.macIconImage}
+        draggable={false}
+      />
+    </div>
+  );
+}
+
+export type WindowsIconProps = {
+  icon: keyof typeof WINDOWS_APPS;
+  index?: number;
+  taskbarApps?: string[];
+  setTaskbarApps?: (value: (keyof typeof WINDOWS_APPS)[]) => void;
+};
+export function WindowsIcon({
+  icon,
+  index,
+  taskbarApps,
+  setTaskbarApps,
+}: WindowsIconProps) {
+  const [dragHover, setDragHover] = useState(false);
+
+  return (
+    <div
+      className={
+        styles.windowsIcon + " " + (dragHover ? styles.macIconDragHover : "")
+      }
+      draggable
+      onDragStart={(event) => {
+        event.dataTransfer.setData("text/plain", icon);
+      }}
+      onDragOver={(event) => {
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        setDragHover(true);
+      }}
+      onDragLeave={() => {
+        setDragHover(false);
+      }}
+      onDrop={(event) => {
+        event.preventDefault();
+        setDragHover(false);
+
+        if (index !== undefined && taskbarApps && setTaskbarApps) {
+          const droppedIcon = event.dataTransfer.getData("text/plain");
+          const droppedIconIndex = taskbarApps.indexOf(droppedIcon);
+          if (droppedIconIndex !== -1 && droppedIconIndex < index) {
+            const newDockApps = taskbarApps.filter(
+              (app) => app !== droppedIcon
+            );
+            newDockApps.splice(index, 0, droppedIcon);
+
+            setTaskbarApps(newDockApps as (keyof typeof WINDOWS_APPS)[]);
+          } else {
+            const newDockApps = taskbarApps.filter(
+              (app) => app !== droppedIcon
+            );
+            newDockApps.splice(index + 1, 0, droppedIcon);
+
+            setTaskbarApps(newDockApps as (keyof typeof WINDOWS_APPS)[]);
+          }
+        }
+      }}>
+      <img
+        src={
+          import.meta.env.BASE_URL +
+          "assets/appicons/windows/" +
+          icon +
+          "." +
+          WINDOWS_APPS[icon]
+        }
+        className={styles.macIconImage}
         draggable={false}
       />
     </div>
