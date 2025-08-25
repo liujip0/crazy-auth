@@ -1,5 +1,5 @@
 import { Button } from "@liujip0/components";
-import React, { Suspense, useState } from "react";
+import React, { useRef, useState } from "react";
 import {
   ITEM_SEPARATOR,
   MAC_APPS,
@@ -19,6 +19,10 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
   );
   const [leftDragHover, setLeftDragHover] = useState(false);
   const [rightDragHover, setRightDragHover] = useState(false);
+  const macRefs = useRef<HTMLImageElement>([]);
+  const windowsRefs = useRef([]);
+  const [loadedImages, setLoadedImages] = useState(0);
+  console.log(loadedImages, Object.keys(WINDOWS_APPS).length);
 
   return (
     <div className={styles.container}>
@@ -62,26 +66,37 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                 setTaskbarApps(taskbarApps.filter((app) => app !== icon));
               }
             }}>
-            <Suspense fallback={<div>Loading icons...</div>}>
-              {os === "mac" ?
-                Object.keys(MAC_APPS).map((app) =>
-                  dockApps.includes(app as keyof typeof MAC_APPS) ?
-                    <React.Fragment key={app}></React.Fragment>
-                  : <MacIcon
-                      key={app}
-                      icon={app as keyof typeof MAC_APPS}
-                    />
-                )
-              : Object.keys(WINDOWS_APPS).map((app) =>
-                  taskbarApps.includes(app as keyof typeof WINDOWS_APPS) ?
-                    <React.Fragment key={app}></React.Fragment>
-                  : <WindowsIcon
-                      key={app}
-                      icon={app as keyof typeof WINDOWS_APPS}
-                    />
-                )
-              }
-            </Suspense>
+            {os === "mac" ?
+              Object.keys(MAC_APPS).map((app, keyIndex) =>
+                dockApps.includes(app as keyof typeof MAC_APPS) ?
+                  <React.Fragment key={app}></React.Fragment>
+                : <MacIcon
+                    ref={macRefs[keyIndex]}
+                    key={app}
+                    icon={app as keyof typeof MAC_APPS}
+                    onLoad={() => {
+                      setLoadedImages(loadedImages + 1);
+                    }}
+                  />
+              )
+            : Object.keys(WINDOWS_APPS).map((app) =>
+                taskbarApps.includes(app as keyof typeof WINDOWS_APPS) ?
+                  <React.Fragment key={app}></React.Fragment>
+                : <WindowsIcon
+                    key={app}
+                    icon={app as keyof typeof WINDOWS_APPS}
+                    onLoad={() => {
+                      setLoadedImages(loadedImages + 1);
+                    }}
+                  />
+              )
+            }
+            {loadedImages <
+              (os === "mac" ?
+                Object.keys(MAC_APPS).length
+              : Object.keys(WINDOWS_APPS).length) && (
+              <div className={styles.loadingText}>Loading Icons...</div>
+            )}
           </div>
           <div className={os === "mac" ? styles.dock : styles.taskbar}>
             <div
@@ -115,28 +130,38 @@ export default function PasswordEditor({ onDone }: PasswordEditorProps) {
                   ]);
                 }
               }}></div>
-            <Suspense fallback={<div>Loading icons...</div>}>
-              {os === "mac" ?
-                dockApps.map((app, index) => (
-                  <MacIcon
-                    key={app}
-                    icon={app as keyof typeof MAC_APPS}
-                    index={index}
-                    dockApps={dockApps}
-                    setDockApps={setDockApps}
-                  />
-                ))
-              : taskbarApps.map((app, index) => (
-                  <WindowsIcon
-                    key={app}
-                    icon={app as keyof typeof WINDOWS_APPS}
-                    index={index}
-                    taskbarApps={taskbarApps}
-                    setTaskbarApps={setTaskbarApps}
-                  />
-                ))
-              }
-            </Suspense>
+            {os === "mac" ?
+              dockApps.map((app, index) => (
+                <MacIcon
+                  key={app}
+                  icon={app as keyof typeof MAC_APPS}
+                  index={index}
+                  dockApps={dockApps}
+                  setDockApps={setDockApps}
+                  onLoad={() => {
+                    setLoadedImages(loadedImages + 1);
+                  }}
+                />
+              ))
+            : taskbarApps.map((app, index) => (
+                <WindowsIcon
+                  key={app}
+                  icon={app as keyof typeof WINDOWS_APPS}
+                  index={index}
+                  taskbarApps={taskbarApps}
+                  setTaskbarApps={setTaskbarApps}
+                  onLoad={() => {
+                    setLoadedImages(loadedImages + 1);
+                  }}
+                />
+              ))
+            }
+            {loadedImages <
+              (os === "mac" ?
+                Object.keys(MAC_APPS).length
+              : Object.keys(WINDOWS_APPS).length) && (
+              <div className={styles.loadingText}>Loading Icons...</div>
+            )}
             <div
               className={
                 (os === "mac" ? styles.dockSpacer : styles.taskbarSpacerRight) +
@@ -195,8 +220,15 @@ export type MacIconProps = {
   index?: number;
   dockApps?: string[];
   setDockApps?: (value: (keyof typeof MAC_APPS)[]) => void;
+  onLoad?: () => void;
 };
-export function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
+export function MacIcon({
+  icon,
+  index,
+  dockApps,
+  setDockApps,
+  onLoad,
+}: MacIconProps) {
   const [dragHover, setDragHover] = useState(false);
 
   return (
@@ -246,6 +278,9 @@ export function MacIcon({ icon, index, dockApps, setDockApps }: MacIconProps) {
         }
         className={styles.macIconImage}
         draggable={false}
+        onLoad={() => {
+          onLoad?.();
+        }}
       />
     </div>
   );
@@ -256,12 +291,14 @@ export type WindowsIconProps = {
   index?: number;
   taskbarApps?: string[];
   setTaskbarApps?: (value: (keyof typeof WINDOWS_APPS)[]) => void;
+  onLoad?: () => void;
 };
 export function WindowsIcon({
   icon,
   index,
   taskbarApps,
   setTaskbarApps,
+  onLoad,
 }: WindowsIconProps) {
   const [dragHover, setDragHover] = useState(false);
 
@@ -316,6 +353,9 @@ export function WindowsIcon({
         }
         className={styles.macIconImage}
         draggable={false}
+        onLoad={() => {
+          onLoad?.();
+        }}
       />
     </div>
   );
