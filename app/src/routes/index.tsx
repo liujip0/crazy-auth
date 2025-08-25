@@ -33,6 +33,7 @@ export default function Index() {
         <div className={styles.feed}>
           {getPosts.data?.map((post) => (
             <Post
+              key={post.id}
               title={post.title}
               user={post.user}
               content={post.body}

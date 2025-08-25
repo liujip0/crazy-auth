@@ -35,6 +35,7 @@ export default function MyPosts() {
           <h1 className={styles.title}>My Posts</h1>
           {getPosts.data?.map((post) => (
             <Post
+              key={post.id}
               title={post.title}
               user={post.user}
               content={post.body}
