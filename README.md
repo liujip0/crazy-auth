@@ -10,11 +10,11 @@ Instead of users creating a password like normal, this app has them choose an OS
 
 Internally, the OS name and the app names are concatenated together, then treated as a normal password.
 
-If your taskbar contains an application that is currently not supported, feel free to create a GitHub issue and suggest it!
+If your taskbar contains an application that is currently not supported, feel free to create a GitHub issue and suggest it! Also, if you perchance have better image files than the ones that I used, please create an issue with a link! (Or, if the file is small enough, email or something else is totally OK.)
 
 ## Technologies used
 
-For this project, I used Vite + TS + React to make the frontend, and Cloudflare Workers + TS to make the backend. The communication between them is done using tRPC.
+For this project, I used Vite + TS + React with React Router and CSS Modules to make the frontend, and Cloudflare Workers + TS with Cloudflare D1 Database to make the backend. The communication between them is done using tRPC.
 
 ## Setup for local testing
 
@@ -55,7 +55,14 @@ Windows:
 pnpm create-environment-windows
 ```
 
-### 4. Start local development server
+### 4. Apply migrations on local database
+
+```zsh
+cd api
+pnpm wrangler d1 migrations apply crazy-auth-db
+```
+
+### 5. Start local development server
 
 ```zsh
 pnpm dev
