@@ -12,10 +12,12 @@ import { useNavigate } from "react-router";
 import {
   ITEM_SEPARATOR,
   OS_SEPARATOR,
+  WINDOWS_APPS,
   type MAC_APPS,
 } from "../components/appslist.ts";
 import PasswordEditor, {
   MacIcon,
+  WindowsIcon,
 } from "../components/PasswordEditor/PasswordEditor.tsx";
 import TopBar from "../components/TopBar/TopBar.tsx";
 import { LOCAL_STORAGE_KEYS, trpc } from "../trpc.ts";
@@ -112,15 +114,25 @@ export default function LogIn() {
           <DialogContent>
             <div className={styles.dock}>
               {password !== "" &&
-                password
-                  .split(OS_SEPARATOR)[1]
-                  .split(ITEM_SEPARATOR)
-                  .map((app) => (
-                    <MacIcon
-                      key={app}
-                      icon={app as keyof typeof MAC_APPS}
-                    />
-                  ))}
+                (password.split(OS_SEPARATOR)[0] === "mac" ?
+                  password
+                    .split(OS_SEPARATOR)[1]
+                    .split(ITEM_SEPARATOR)
+                    .map((app) => (
+                      <MacIcon
+                        key={app}
+                        icon={app as keyof typeof MAC_APPS}
+                      />
+                    ))
+                : password
+                    .split(OS_SEPARATOR)[1]
+                    .split(ITEM_SEPARATOR)
+                    .map((app) => (
+                      <WindowsIcon
+                        key={app}
+                        icon={app as keyof typeof WINDOWS_APPS}
+                      />
+                    )))}
             </div>
             {loginError && <p className={styles.errorMessage}>{loginError}</p>}
           </DialogContent>

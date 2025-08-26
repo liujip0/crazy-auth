@@ -13,9 +13,11 @@ import {
   ITEM_SEPARATOR,
   MAC_APPS,
   OS_SEPARATOR,
+  WINDOWS_APPS,
 } from "../components/appslist.ts";
 import PasswordEditor, {
   MacIcon,
+  WindowsIcon,
 } from "../components/PasswordEditor/PasswordEditor.tsx";
 import TopBar from "../components/TopBar/TopBar.tsx";
 import { trpc } from "../trpc.ts";
@@ -112,15 +114,25 @@ export default function SignUp() {
           <DialogContent>
             <div className={styles.dock}>
               {password !== "" &&
-                password
-                  .split(OS_SEPARATOR)[1]
-                  .split(ITEM_SEPARATOR)
-                  .map((app) => (
-                    <MacIcon
-                      key={app}
-                      icon={app as keyof typeof MAC_APPS}
-                    />
-                  ))}
+                (password.split(OS_SEPARATOR)[0] === "mac" ?
+                  password
+                    .split(OS_SEPARATOR)[1]
+                    .split(ITEM_SEPARATOR)
+                    .map((app) => (
+                      <MacIcon
+                        key={app}
+                        icon={app as keyof typeof MAC_APPS}
+                      />
+                    ))
+                : password
+                    .split(OS_SEPARATOR)[1]
+                    .split(ITEM_SEPARATOR)
+                    .map((app) => (
+                      <WindowsIcon
+                        key={app}
+                        icon={app as keyof typeof WINDOWS_APPS}
+                      />
+                    )))}
             </div>
           </DialogContent>
           <DialogActions>
