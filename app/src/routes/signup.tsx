@@ -74,6 +74,12 @@ export default function SignUp() {
                   setUsernameError("Username must be at least 3 characters");
                   return;
                 }
+                if (/"|'|\/|\\|\||<|>/.test(username)) {
+                  setUsernameError(
+                    "Username cannot contain quotes, slashes, pipes, or angle brackets"
+                  );
+                }
+
                 const check = await checkusername.mutateAsync(username);
                 switch (check) {
                   case "ok":
